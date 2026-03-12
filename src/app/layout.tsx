@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { CopilotKit } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/styles.css";
 import "./globals.css";
+import { Sidebar } from "@/components/Sidebar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CopilotKit runtimeUrl="/api/copilotkit">
-          {children}
+          <div className="flex min-h-screen bg-gray-50">
+            <Sidebar />
+            <main className="flex-1 overflow-auto">{children}</main>
+          </div>
         </CopilotKit>
       </body>
     </html>
