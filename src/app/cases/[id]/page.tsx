@@ -7,6 +7,7 @@ import { clsx } from "clsx";
 import { DocumentsTab } from "@/components/DocumentsTab";
 import { AskDocsTab } from "./tabs/AskDocsTab";
 import { PrepOutlineTab } from "./tabs/PrepOutlineTab";
+import { DepositionsTab } from "./tabs/DepositionsTab";
 
 interface Document {
   id: string;
@@ -121,9 +122,7 @@ export default function CaseDetailPage() {
         <PrepOutlineTab caseId={caseData.id} />
       )}
       {activeTab === "Depositions" && (
-        <div className="text-center py-16 text-gray-400 text-sm">
-          Depositions will be built in Phase 6
-        </div>
+        <DepositionsTab caseId={caseData.id} />
       )}
     </div>
   );
