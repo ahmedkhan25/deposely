@@ -3,7 +3,7 @@ services:
     name: deposely
     runtime: node
     region: oregon
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
@@ -32,7 +32,7 @@ services:
     runtime: node
     region: oregon
     rootDir: recall-service
-    buildCommand: npm install && npx tsc
+    buildCommand: npm install --include=dev && npx tsc
     startCommand: node dist/src/index.js
     envVars:
       - key: DATABASE_URL
