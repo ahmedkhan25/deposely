@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "neon": {
+      "type": "http",
+      "url": "https://mcp.neon.tech/mcp"
+    },
+    "recall-ai": {
+      "type": "http",
+      "url": "https://docs.recall.ai/mcp"
+    }
+  }
+}

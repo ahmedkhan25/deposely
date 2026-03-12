@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: deposely-recall-service
+    runtime: node
+    region: oregon
+    rootDir: recall-service
+    buildCommand: npm install && npx tsc
+    startCommand: node dist/src/index.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: RECALL_WEBHOOK_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production
