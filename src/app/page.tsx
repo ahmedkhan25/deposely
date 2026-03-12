@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import {
   FileText,
   MessageSquare,
@@ -9,6 +10,8 @@ import {
   AlertTriangle,
   ArrowRight,
   Sparkles,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 const features = [
@@ -61,33 +64,69 @@ const steps = [
 
 export default function LandingPage() {
   const router = useRouter();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  function toggleMute() {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setMuted(videoRef.current.muted);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero */}
-      <div className="max-w-4xl mx-auto px-8 pt-16 pb-12 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-medium text-[#4F6EF7] bg-[#4F6EF7]/10 rounded-full">
-          <Sparkles size={12} />
-          Technology POC &middot; Built by Ahmed Khan
+      <div className="max-w-5xl mx-auto px-8 pt-16 pb-12">
+        <div className="flex flex-col lg:flex-row items-center gap-10">
+          {/* Video — left side */}
+          <div className="relative w-full lg:w-5/12 shrink-0">
+            <div className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-200 bg-black">
+              <video
+                ref={videoRef}
+                src="/avatar-video-sm.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full aspect-[9/16] object-cover"
+              />
+              <button
+                onClick={toggleMute}
+                className="absolute bottom-3 right-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+                title={muted ? "Unmute" : "Mute"}
+              >
+                {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Text — right side */}
+          <div className="text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-medium text-[#4F6EF7] bg-[#4F6EF7]/10 rounded-full">
+              <Sparkles size={12} />
+              Technology POC &middot; Built by Ahmed Khan
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+              Deposly <span className="text-2xl font-normal text-gray-400">Lite</span>
+            </h1>
+            <p className="text-lg text-gray-600 mb-2">
+              AI-powered deposition preparation and live testimony analysis for attorneys.
+            </p>
+            <p className="text-sm text-gray-500 mb-8">
+              This proof-of-concept demonstrates the architecture and technology behind Deposly —
+              document ingestion with RAG, AI-generated deposition outlines, live transcription via Recall.ai,
+              and real-time contradiction detection.
+            </p>
+            <button
+              onClick={() => router.push("/cases")}
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-[#4F6EF7] rounded-lg hover:bg-[#3d5ce0] transition-colors"
+            >
+              Open Case Hub
+              <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-          Deposly <span className="text-2xl font-normal text-gray-400">Lite</span>
-        </h1>
-        <p className="text-lg text-gray-600 mb-2 max-w-2xl mx-auto">
-          AI-powered deposition preparation and live testimony analysis for attorneys.
-        </p>
-        <p className="text-sm text-gray-500 mb-8 max-w-xl mx-auto">
-          This proof-of-concept demonstrates the architecture and technology behind Deposly —
-          document ingestion with RAG, AI-generated deposition outlines, live transcription via Recall.ai,
-          and real-time contradiction detection.
-        </p>
-        <button
-          onClick={() => router.push("/cases")}
-          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-[#4F6EF7] rounded-lg hover:bg-[#3d5ce0] transition-colors"
-        >
-          Open Case Hub
-          <ArrowRight size={16} />
-        </button>
       </div>
 
       {/* Features grid */}
