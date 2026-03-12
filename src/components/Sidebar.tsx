@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase } from "lucide-react";
+import { Briefcase, Server } from "lucide-react";
 import { clsx } from "clsx";
 
 const navItems = [
   { href: "/cases", label: "Cases", icon: Briefcase },
+  { href: "/architecture", label: "Architecture", icon: Server },
 ];
 
 export function Sidebar() {
