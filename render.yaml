@@ -1,5 +1,33 @@
 services:
   - type: web
+    name: deposely
+    runtime: node
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: us-west-2
+      - key: S3_BUCKET_NAME
+        value: deposely-vectors
+      - key: RECALL_AI_API_KEY
+        sync: false
+      - key: RECALL_WEBHOOK_SECRET
+        sync: false
+      - key: RENDER_WEBHOOK_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
+
+  - type: web
     name: deposely-recall-service
     runtime: node
     region: oregon

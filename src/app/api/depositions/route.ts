@@ -47,17 +47,20 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         meeting_url: zoomUrl,
         bot_name: "Deposely",
-        transcription_options: {
-          provider: "default",
-        },
         recording_config: {
-          real_time_endpoints: [
+          transcript: {
+            provider: {
+              recallai_streaming: {
+                mode: "prioritize_low_latency",
+                language_code: "en",
+              },
+            },
+          },
+          realtime_endpoints: [
             {
               type: "webhook",
-              config: {
-                url: `${process.env.RENDER_WEBHOOK_URL}/webhook/recall/realtime?token=${process.env.RECALL_WEBHOOK_SECRET}`,
-                events: ["bot.transcription"],
-              },
+              url: `${process.env.RENDER_WEBHOOK_URL}/webhook/recall/realtime?token=${process.env.RECALL_WEBHOOK_SECRET}`,
+              events: ["transcript.data"],
             },
           ],
         },

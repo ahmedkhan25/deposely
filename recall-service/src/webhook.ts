@@ -47,9 +47,10 @@ router.post(
     }
 
     const body = req.body;
-    console.log(`[realtime] event=${body.event}`);
+    console.log(`[realtime] event=${body.event}`, JSON.stringify(body).slice(0, 200));
 
-    if (body.event === "bot.transcription") {
+    // Handle transcript.data from realtime endpoints
+    if (body.event === "transcript.data" || body.event === "bot.transcription") {
       handleTranscription(body.data).catch(console.error);
     }
 
@@ -84,15 +85,26 @@ async function handleBotStatusChange(data: Record<string, unknown>) {
 async function handleTranscription(data: Record<string, unknown>) {
   const botId = (data.bot_id ?? data.bot) as string;
   const transcript = data.transcript as {
-    words: Array<{ text: string; start_ms: number; end_ms: number; speaker: string }>;
+    words?: Array<{
+      text: string;
+      start_ms?: number;
+      start_timestamp?: { relative: number };
+      speaker?: string;
+    }>;
+    speaker?: string;
+    speaker_id?: number;
+    original_transcript_id?: number;
   };
 
   if (!transcript?.words?.length) return;
 
   // Reconstruct sentence from words
   const text = transcript.words.map((w) => w.text).join(" ");
-  const speaker = transcript.words[0].speaker || "Unknown";
-  const startMs = transcript.words[0].start_ms;
+  // Speaker can be on individual words or on the transcript object
+  const speaker = transcript.words[0].speaker || transcript.speaker || "Unknown";
+  // Timestamps can be start_ms (ms) or start_timestamp.relative (seconds)
+  const firstWord = transcript.words[0];
+  const startMs = firstWord.start_ms ?? Math.round((firstWord.start_timestamp?.relative ?? 0) * 1000);
 
   const segment = { speaker, text, start_ms: startMs };
 
