@@ -23,8 +23,7 @@ async function migrate() {
 
   for (const statement of statements) {
     try {
-      // Neon's sql() expects tagged template literals; use sql.call with raw string
-      await sql([statement] as unknown as TemplateStringsArray);
+      await sql.query(statement);
       console.log("  ✓", statement.slice(0, 60).replace(/\n/g, " ") + "...");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);

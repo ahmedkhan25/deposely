@@ -66,14 +66,10 @@ async function handleBotStatusChange(data: Record<string, unknown>) {
 
   if (status === "done") {
     // Set deposition status to done
-    await sql([
-      `UPDATE depositions SET status = 'done' WHERE recall_bot_id = '${botId}'`,
-    ] as unknown as TemplateStringsArray);
+    await sql(`UPDATE depositions SET status = 'done' WHERE recall_bot_id = $1`, [botId]);
 
     // Get deposition for summary generation
-    const rows = await sql([
-      `SELECT id, case_id FROM depositions WHERE recall_bot_id = '${botId}'`,
-    ] as unknown as TemplateStringsArray);
+    const rows = await sql(`SELECT id, case_id FROM depositions WHERE recall_bot_id = $1`, [botId]);
 
     if (rows.length > 0) {
       const depo = rows[0] as { id: string; case_id: string };
@@ -101,9 +97,7 @@ async function handleTranscription(data: Record<string, unknown>) {
   const segment = { speaker, text, start_ms: startMs };
 
   // Find deposition by bot ID
-  const rows = await sql([
-    `SELECT id, case_id, transcript FROM depositions WHERE recall_bot_id = '${botId}'`,
-  ] as unknown as TemplateStringsArray);
+  const rows = await sql(`SELECT id, case_id, transcript FROM depositions WHERE recall_bot_id = $1`, [botId]);
 
   if (rows.length === 0) {
     console.error(`No deposition found for bot ${botId}`);
@@ -118,9 +112,7 @@ async function handleTranscription(data: Record<string, unknown>) {
 
   // Append segment to transcript
   const updatedTranscript = [...(depo.transcript || []), segment];
-  await sql([
-    `UPDATE depositions SET transcript = '${JSON.stringify(updatedTranscript).replace(/'/g, "''")}', status = 'live' WHERE id = '${depo.id}'`,
-  ] as unknown as TemplateStringsArray);
+  await sql(`UPDATE depositions SET transcript = $1, status = 'live' WHERE id = $2`, [JSON.stringify(updatedTranscript), depo.id]);
 
   // Broadcast to SSE clients
   broadcast(depo.id, { type: "transcript", segment });
@@ -144,14 +136,15 @@ async function checkContradiction(
   const embeddingStr = `[${embedding.join(",")}]`;
 
   // Find top 3 similar document chunks
-  const chunks = await sql([
+  const chunks = await sql(
     `SELECT dc.content, d.filename as source_doc, dc.id as chunk_id
      FROM document_chunks dc
      JOIN documents d ON dc.document_id = d.id
-     WHERE dc.case_id = '${caseId}'
-     ORDER BY dc.embedding <=> '${embeddingStr}'
+     WHERE dc.case_id = $1
+     ORDER BY dc.embedding <=> $2
      LIMIT 3`,
-  ] as unknown as TemplateStringsArray);
+    [caseId, embeddingStr]
+  );
 
   if (chunks.length === 0) return;
 
@@ -201,11 +194,12 @@ Respond ONLY with JSON: { "contradiction": boolean, "explanation": string, "conf
   const chunkId = (chunks[0] as { chunk_id: string }).chunk_id;
 
   // Insert flag into DB
-  await sql([
+  await sql(
     `INSERT INTO contradiction_flags (deposition_id, testimony_text, conflicting_text, source_doc, chunk_id)
-     VALUES ('${depositionId}', '${segmentText.replace(/'/g, "''")}', '${result.conflicting_text.replace(/'/g, "''")}', '${sourceDoc.replace(/'/g, "''")}', '${chunkId}')
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING id`,
-  ] as unknown as TemplateStringsArray);
+    [depositionId, segmentText, result.conflicting_text, sourceDoc, chunkId]
+  );
 
   // Broadcast flag to SSE clients
   broadcast(depositionId, {
@@ -222,9 +216,7 @@ Respond ONLY with JSON: { "contradiction": boolean, "explanation": string, "conf
 // ─── Post-deposition summary ─────────────────────────────────────────────────
 async function generateSummary(depositionId: string, caseId: string) {
   // Fetch full transcript
-  const depoRows = await sql([
-    `SELECT transcript FROM depositions WHERE id = '${depositionId}'`,
-  ] as unknown as TemplateStringsArray);
+  const depoRows = await sql(`SELECT transcript FROM depositions WHERE id = $1`, [depositionId]);
   const transcript = (depoRows[0] as { transcript: Array<{ speaker: string; text: string; start_ms: number }> }).transcript;
 
   if (!transcript?.length) return;
@@ -234,24 +226,26 @@ async function generateSummary(depositionId: string, caseId: string) {
     .join("\n");
 
   // Fetch top 20 document chunks for context
-  const chunks = await sql([
+  const chunks = await sql(
     `SELECT dc.content, d.filename
      FROM document_chunks dc
      JOIN documents d ON dc.document_id = d.id
-     WHERE dc.case_id = '${caseId}'
+     WHERE dc.case_id = $1
      LIMIT 20`,
-  ] as unknown as TemplateStringsArray);
+    [caseId]
+  );
 
   const docsContext = (chunks as Array<{ content: string; filename: string }>)
     .map((c) => `[${c.filename}]: ${c.content}`)
     .join("\n\n");
 
   // Fetch contradiction flags
-  const flags = await sql([
+  const flags = await sql(
     `SELECT testimony_text, conflicting_text, source_doc
      FROM contradiction_flags
-     WHERE deposition_id = '${depositionId}' AND dismissed = false`,
-  ] as unknown as TemplateStringsArray);
+     WHERE deposition_id = $1 AND dismissed = false`,
+    [depositionId]
+  );
 
   const flagsText = (flags as Array<{ testimony_text: string; conflicting_text: string; source_doc: string }>)
     .map(
@@ -298,9 +292,7 @@ Output as JSON:
 
   const summary = completion.choices[0].message.content?.trim() ?? "";
 
-  await sql([
-    `UPDATE depositions SET summary = '${summary.replace(/'/g, "''")}' WHERE id = '${depositionId}'`,
-  ] as unknown as TemplateStringsArray);
+  await sql(`UPDATE depositions SET summary = $1 WHERE id = $2`, [summary, depositionId]);
 
   broadcast(depositionId, { type: "summary", summary });
 }
