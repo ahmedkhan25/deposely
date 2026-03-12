@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
           realtime_endpoints: [
             {
               type: "webhook",
-              url: `${process.env.RENDER_WEBHOOK_URL}/webhook/recall/realtime?token=${process.env.RECALL_WEBHOOK_SECRET}`,
+              url: `${process.env.RENDER_WEBHOOK_URL}/webhook/recall/realtime?token=${encodeURIComponent(process.env.RECALL_WEBHOOK_SECRET!)}`,
               events: ["transcript.data"],
             },
           ],

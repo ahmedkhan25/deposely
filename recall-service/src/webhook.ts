@@ -43,15 +43,22 @@ router.post(
   "/webhook/recall/realtime",
   (req: Request, res: Response) => {
     if (req.query.token !== process.env.RECALL_WEBHOOK_SECRET) {
+      console.error(`[realtime] 401 — token mismatch. got=${JSON.stringify(req.query.token)}`);
       return res.status(401).send("Unauthorized");
     }
 
     const body = req.body;
-    console.log(`[realtime] event=${body.event}`, JSON.stringify(body).slice(0, 200));
+    console.log(`[realtime] received:`, JSON.stringify(body).slice(0, 500));
 
-    // Handle transcript.data from realtime endpoints
-    if (body.event === "transcript.data" || body.event === "bot.transcription") {
-      handleTranscription(body.data).catch(console.error);
+    // Recall.ai realtime endpoints may send:
+    // 1. { event: "transcript.data", data: { ... } }
+    // 2. { data: { bot_id, transcript } } — no event field
+    const payload = body.data ?? body;
+
+    if (body.event === "transcript.data" || body.event === "bot.transcription" || payload.transcript) {
+      handleTranscription(payload).catch((err) =>
+        console.error("[realtime] handleTranscription error:", err)
+      );
     }
 
     res.status(204).send();
@@ -84,6 +91,8 @@ async function handleBotStatusChange(data: Record<string, unknown>) {
 // ─── Real-time transcription handler ─────────────────────────────────────────
 async function handleTranscription(data: Record<string, unknown>) {
   const botId = (data.bot_id ?? data.bot) as string;
+  console.log(`[transcription] botId=${botId}, keys=${Object.keys(data).join(",")}`);
+
   const transcript = data.transcript as {
     words?: Array<{
       text: string;
@@ -96,7 +105,10 @@ async function handleTranscription(data: Record<string, unknown>) {
     original_transcript_id?: number;
   };
 
-  if (!transcript?.words?.length) return;
+  if (!transcript?.words?.length) {
+    console.log(`[transcription] no words found, transcript keys=${transcript ? Object.keys(transcript).join(",") : "null"}`);
+    return;
+  }
 
   // Reconstruct sentence from words
   const text = transcript.words.map((w) => w.text).join(" ");

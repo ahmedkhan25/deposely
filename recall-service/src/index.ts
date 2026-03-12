@@ -7,10 +7,11 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ─── Body parsing ────────────────────────────────────────────────────────────
+// Real-time webhook uses JSON — must be registered BEFORE the raw parser
+// because express.raw("/webhook/recall") prefix-matches "/webhook/recall/realtime"
+app.use("/webhook/recall/realtime", express.json());
 // Svix webhook verification needs raw body
 app.use("/webhook/recall", express.raw({ type: "application/json" }));
-// Real-time webhook uses JSON
-app.use("/webhook/recall/realtime", express.json());
 // Everything else
 app.use(express.json());
 
