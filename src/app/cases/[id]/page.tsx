@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useCopilotReadable } from "@copilotkit/react-core";
 import { clsx } from "clsx";
 import { DocumentsTab } from "@/components/DocumentsTab";
+import { AskDocsTab } from "./tabs/AskDocsTab";
 
 interface Document {
   id: string;
@@ -113,9 +114,7 @@ export default function CaseDetailPage() {
         />
       )}
       {activeTab === "Ask Docs" && (
-        <div className="text-center py-16 text-gray-400 text-sm">
-          Ask Docs will be built in Phase 3
-        </div>
+        <AskDocsTab caseId={caseData.id} />
       )}
       {activeTab === "Prep Outline" && (
         <div className="text-center py-16 text-gray-400 text-sm">
