@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 import { CopilotChat } from "@copilotkit/react-ui";
-import { ListTree } from "lucide-react";
+import { ListTree, Sparkles } from "lucide-react";
 import { OutlineTree, type OutlineTheme } from "@/components/OutlineTree";
 
 interface PrepOutlineTabProps {
@@ -78,15 +78,39 @@ Focus on: key facts to establish, potential contradictions to explore, timeline 
     ),
   });
 
+  function handleGenerate() {
+    // Programmatically send a message to the CopilotChat
+    const input = document.querySelector<HTMLTextAreaElement>('.copilotKitInput textarea');
+    if (input) {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLTextAreaElement.prototype, 'value'
+      )?.set;
+      nativeInputValueSetter?.call(input, 'Generate a comprehensive deposition outline for this case based on all uploaded documents');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      setTimeout(() => {
+        const form = input.closest('form');
+        form?.requestSubmit();
+      }, 100);
+    }
+  }
+
   return (
     <div className="space-y-4">
       {/* Generate button */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-600">
           {docExcerpts.length > 0
             ? `${docExcerpts.length} document excerpts loaded for analysis`
             : "Loading document excerpts..."}
         </p>
+        <button
+          onClick={handleGenerate}
+          disabled={docExcerpts.length === 0}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#4F6EF7] rounded-lg hover:bg-[#3d5ce0] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Sparkles size={16} />
+          Generate Outline
+        </button>
       </div>
 
       {/* Chat with outline rendering */}

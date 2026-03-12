@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Clock } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Clock, Download } from "lucide-react";
 import { clsx } from "clsx";
 
 interface Document {
@@ -137,18 +137,33 @@ export function DocumentsTab({ caseId, documents, onRefresh }: DocumentsTabProps
                     )}
                   </div>
                 </div>
-                <span
-                  className={clsx(
-                    "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
-                    status.color
+                <div className="flex items-center gap-2">
+                  {doc.status === "ready" && (
+                    <button
+                      onClick={async () => {
+                        const res = await fetch(`/api/documents/${doc.id}/download`);
+                        const { downloadUrl } = await res.json();
+                        window.open(downloadUrl, "_blank");
+                      }}
+                      className="p-1.5 text-gray-500 hover:text-[#4F6EF7] hover:bg-gray-100 rounded-lg transition-colors"
+                      title="View / Download"
+                    >
+                      <Download size={14} />
+                    </button>
                   )}
-                >
-                  <Icon
-                    size={12}
-                    className={doc.status === "processing" ? "animate-spin" : ""}
-                  />
-                  {status.label}
-                </span>
+                  <span
+                    className={clsx(
+                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
+                      status.color
+                    )}
+                  >
+                    <Icon
+                      size={12}
+                      className={doc.status === "processing" ? "animate-spin" : ""}
+                    />
+                    {status.label}
+                  </span>
+                </div>
               </div>
             );
           })}

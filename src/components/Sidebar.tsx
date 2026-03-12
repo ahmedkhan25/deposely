@@ -15,7 +15,7 @@ export function Sidebar() {
   return (
     <aside className="w-56 bg-[#0F1629] text-white flex flex-col min-h-screen">
       <div className="p-4 border-b border-white/10">
-        <h1 className="text-lg font-semibold tracking-tight">Deposely</h1>
+        <h1 className="text-lg font-semibold tracking-tight">Deposly <span className="text-xs font-normal text-white/50">Lite</span></h1>
       </div>
       <nav className="flex-1 p-3 space-y-1">
         {navItems.map((item) => {
