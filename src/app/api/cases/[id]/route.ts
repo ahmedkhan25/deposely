@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { cases, documents } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // GET /api/cases/[id] — case + documents
 export async function GET(
@@ -13,7 +13,7 @@ export async function GET(
   const [caseRow] = await db
     .select()
     .from(cases)
-    .where(eq(cases.id, id))
+    .where(sql`${cases.id} = ${id}::uuid`)
     .limit(1);
 
   if (!caseRow) {
@@ -23,7 +23,7 @@ export async function GET(
   const docs = await db
     .select()
     .from(documents)
-    .where(eq(documents.caseId, id));
+    .where(sql`${documents.caseId} = ${id}::uuid`);
 
   return NextResponse.json({ ...caseRow, documents: docs });
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { depositions, documentChunks, documents, contradictionFlags } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { openai } from "@/lib/openai";
 
 // POST /api/depositions/[id]/summarize — generate post-depo summary
@@ -14,7 +14,7 @@ export async function POST(
   const [depo] = await db
     .select()
     .from(depositions)
-    .where(eq(depositions.id, id))
+    .where(sql`${depositions.id} = ${id}::uuid`)
     .limit(1);
 
   if (!depo) {
@@ -45,8 +45,8 @@ export async function POST(
   const chunks = await db
     .select({ content: documentChunks.content, filename: documents.filename })
     .from(documentChunks)
-    .innerJoin(documents, eq(documentChunks.documentId, documents.id))
-    .where(eq(documentChunks.caseId, depo.caseId))
+    .innerJoin(documents, sql`${documentChunks.documentId} = ${documents.id}`)
+    .where(sql`${documentChunks.caseId} = ${depo.caseId}::uuid`)
     .limit(20);
 
   const docsContext = chunks
@@ -57,7 +57,7 @@ export async function POST(
   const flags = await db
     .select()
     .from(contradictionFlags)
-    .where(eq(contradictionFlags.depositionId, id));
+    .where(sql`${contradictionFlags.depositionId} = ${id}::uuid`);
 
   const flagsText = flags
     .filter((f) => !f.dismissed)
@@ -104,7 +104,7 @@ Output JSON:
   await db
     .update(depositions)
     .set({ summary })
-    .where(eq(depositions.id, id));
+    .where(sql`${depositions.id} = ${id}::uuid`);
 
   return NextResponse.json({ summary });
 }

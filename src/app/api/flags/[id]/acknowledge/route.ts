@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { contradictionFlags } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // POST /api/flags/[id]/acknowledge — mark flag as dismissed
 export async function POST(
@@ -11,7 +11,7 @@ export async function POST(
   await db
     .update(contradictionFlags)
     .set({ dismissed: true })
-    .where(eq(contradictionFlags.id, params.id));
+    .where(sql`${contradictionFlags.id} = ${params.id}::uuid`);
 
   return NextResponse.json({ success: true });
 }

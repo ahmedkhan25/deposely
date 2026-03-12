@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { depositions, contradictionFlags } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // GET /api/depositions/[id] — deposition + flags
 export async function GET(
@@ -13,7 +13,7 @@ export async function GET(
   const [depo] = await db
     .select()
     .from(depositions)
-    .where(eq(depositions.id, id))
+    .where(sql`${depositions.id} = ${id}::uuid`)
     .limit(1);
 
   if (!depo) {
@@ -23,7 +23,7 @@ export async function GET(
   const flags = await db
     .select()
     .from(contradictionFlags)
-    .where(eq(contradictionFlags.depositionId, id));
+    .where(sql`${contradictionFlags.depositionId} = ${id}::uuid`);
 
   return NextResponse.json({ ...depo, flags });
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { depositions } from "@/db";
-import { eq, desc } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 
 // GET /api/depositions?caseId=xxx — list depositions for a case
 export async function GET(req: NextRequest) {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const rows = await db
     .select()
     .from(depositions)
-    .where(eq(depositions.caseId, caseId))
+    .where(sql`${depositions.caseId} = ${caseId}::uuid`)
     .orderBy(desc(depositions.createdAt));
 
   return NextResponse.json(rows);
@@ -48,8 +48,7 @@ export async function POST(req: NextRequest) {
         meeting_url: zoomUrl,
         bot_name: "Deposely",
         transcription_options: {
-          provider: "recalled_ai",
-          mode: "prioritize_low_latency",
+          provider: "default",
         },
         recording_config: {
           real_time_endpoints: [
@@ -70,7 +69,7 @@ export async function POST(req: NextRequest) {
       await db
         .update(depositions)
         .set({ recallBotId: bot.id })
-        .where(eq(depositions.id, depo.id));
+        .where(sql`${depositions.id} = ${depo.id}::uuid`);
     } else {
       console.error("Recall.ai bot creation failed:", await recallRes.text());
     }

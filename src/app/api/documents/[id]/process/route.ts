@@ -3,7 +3,7 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from "@/lib/s3";
 import { db } from "@/lib/db";
 import { documents, documentChunks } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { openai } from "@/lib/openai";
 
 // POST /api/documents/[id]/process — ingest document
@@ -18,7 +18,7 @@ export async function POST(
     const [doc] = await db
       .select()
       .from(documents)
-      .where(eq(documents.id, id))
+      .where(sql`${documents.id} = ${id}::uuid`)
       .limit(1);
 
     if (!doc) {
@@ -29,7 +29,7 @@ export async function POST(
     await db
       .update(documents)
       .set({ status: "processing" })
-      .where(eq(documents.id, id));
+      .where(sql`${documents.id} = ${id}::uuid`);
 
     // Download from S3
     const s3Res = await s3.send(
@@ -64,7 +64,7 @@ export async function POST(
       await db
         .update(documents)
         .set({ status: "error" })
-        .where(eq(documents.id, id));
+        .where(sql`${documents.id} = ${id}::uuid`);
       return NextResponse.json(
         { error: "No text extracted from document" },
         { status: 400 }
@@ -94,7 +94,7 @@ export async function POST(
     await db
       .update(documents)
       .set({ status: "ready" })
-      .where(eq(documents.id, id));
+      .where(sql`${documents.id} = ${id}::uuid`);
 
     return NextResponse.json({
       success: true,
@@ -105,7 +105,7 @@ export async function POST(
     await db
       .update(documents)
       .set({ status: "error" })
-      .where(eq(documents.id, id));
+      .where(sql`${documents.id} = ${id}::uuid`);
     return NextResponse.json(
       { error: "Processing failed" },
       { status: 500 }

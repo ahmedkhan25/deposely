@@ -20,7 +20,7 @@ export async function GET(
     })
     .from(documentChunks)
     .innerJoin(documents, eq(documentChunks.documentId, documents.id))
-    .where(eq(documentChunks.caseId, caseId))
+    .where(sql`${documentChunks.caseId} = ${caseId}::uuid`)
     .orderBy(sql`random()`)
     .limit(limit);
 

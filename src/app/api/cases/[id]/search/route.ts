@@ -34,7 +34,7 @@ export async function POST(
     })
     .from(documentChunks)
     .innerJoin(documents, eq(documentChunks.documentId, documents.id))
-    .where(eq(documentChunks.caseId, caseId))
+    .where(sql`${documentChunks.caseId} = ${caseId}::uuid`)
     .orderBy(sql`${documentChunks.embedding} <=> ${embeddingStr}::vector`)
     .limit(8);
 

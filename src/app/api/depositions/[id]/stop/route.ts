@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { depositions } from "@/db";
-import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // POST /api/depositions/[id]/stop — stop Recall.ai bot
 export async function POST(
@@ -13,7 +13,7 @@ export async function POST(
   const [depo] = await db
     .select()
     .from(depositions)
-    .where(eq(depositions.id, id))
+    .where(sql`${depositions.id} = ${id}::uuid`)
     .limit(1);
 
   if (!depo) {
@@ -39,7 +39,7 @@ export async function POST(
   await db
     .update(depositions)
     .set({ status: "done" })
-    .where(eq(depositions.id, id));
+    .where(sql`${depositions.id} = ${id}::uuid`);
 
   return NextResponse.json({ success: true });
 }
