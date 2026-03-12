@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Clock, Download } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -28,6 +28,17 @@ const statusConfig: Record<string, { color: string; icon: typeof Clock; label: s
 export function DocumentsTab({ caseId, documents, onRefresh }: DocumentsTabProps) {
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  // Auto-poll while any document is pending or processing
+  const hasInProgress = documents.some(
+    (d) => d.status === "pending" || d.status === "processing"
+  );
+
+  useEffect(() => {
+    if (!hasInProgress) return;
+    const interval = setInterval(onRefresh, 3000);
+    return () => clearInterval(interval);
+  }, [hasInProgress, onRefresh]);
 
   const uploadFile = useCallback(
     async (file: File) => {
