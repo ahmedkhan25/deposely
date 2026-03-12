@@ -90,32 +90,48 @@ async function handleBotStatusChange(data: Record<string, unknown>) {
 
 // ─── Real-time transcription handler ─────────────────────────────────────────
 async function handleTranscription(data: Record<string, unknown>) {
-  const botId = (data.bot_id ?? data.bot) as string;
+  // Recall.ai nests: { data: { words }, transcript: { id, metadata }, bot: { id } }
+  const bot = data.bot as string | { id: string } | undefined;
+  const botId =
+    (data.bot_id as string) ??
+    (typeof bot === "string" ? bot : bot?.id) ??
+    null;
   console.log(`[transcription] botId=${botId}, keys=${Object.keys(data).join(",")}`);
 
-  const transcript = data.transcript as {
-    words?: Array<{
-      text: string;
-      start_ms?: number;
-      start_timestamp?: { relative: number };
-      speaker?: string;
-    }>;
+  // Words can be in data.transcript.words (old format) or data.data.words (realtime format)
+  const innerData = data.data as Record<string, unknown> | undefined;
+  const transcriptField = data.transcript as Record<string, unknown> | undefined;
+
+  type Word = {
+    text: string;
+    start_ms?: number;
+    start_timestamp?: { relative: number };
+    end_timestamp?: { relative: number };
     speaker?: string;
-    speaker_id?: number;
-    original_transcript_id?: number;
   };
 
-  if (!transcript?.words?.length) {
-    console.log(`[transcription] no words found, transcript keys=${transcript ? Object.keys(transcript).join(",") : "null"}`);
+  const words: Word[] =
+    (innerData?.words as Word[]) ??
+    (transcriptField?.words as Word[]) ??
+    [];
+
+  const speaker =
+    (words[0]?.speaker as string) ??
+    (transcriptField?.speaker as string) ??
+    (innerData?.speaker as string) ??
+    "Unknown";
+
+  if (!words.length) {
+    console.log(
+      `[transcription] no words found. innerData keys=${innerData ? Object.keys(innerData).join(",") : "null"}, transcript keys=${transcriptField ? Object.keys(transcriptField).join(",") : "null"}`
+    );
     return;
   }
 
   // Reconstruct sentence from words
-  const text = transcript.words.map((w) => w.text).join(" ");
-  // Speaker can be on individual words or on the transcript object
-  const speaker = transcript.words[0].speaker || transcript.speaker || "Unknown";
+  const text = words.map((w) => w.text).join(" ");
   // Timestamps can be start_ms (ms) or start_timestamp.relative (seconds)
-  const firstWord = transcript.words[0];
+  const firstWord = words[0];
   const startMs = firstWord.start_ms ?? Math.round((firstWord.start_timestamp?.relative ?? 0) * 1000);
 
   const segment = { speaker, text, start_ms: startMs };
@@ -137,6 +153,7 @@ async function handleTranscription(data: Record<string, unknown>) {
   // Append segment to transcript
   const updatedTranscript = [...(depo.transcript || []), segment];
   await sql(`UPDATE depositions SET transcript = $1, status = 'live' WHERE id = $2`, [JSON.stringify(updatedTranscript), depo.id]);
+  console.log(`[transcription] saved segment #${updatedTranscript.length} for depo ${depo.id}: "${text.slice(0, 80)}"`);
 
   // Broadcast to SSE clients
   broadcast(depo.id, { type: "transcript", segment });
