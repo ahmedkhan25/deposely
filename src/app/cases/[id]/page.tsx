@@ -6,6 +6,7 @@ import { useCopilotReadable } from "@copilotkit/react-core";
 import { clsx } from "clsx";
 import { DocumentsTab } from "@/components/DocumentsTab";
 import { AskDocsTab } from "./tabs/AskDocsTab";
+import { PrepOutlineTab } from "./tabs/PrepOutlineTab";
 
 interface Document {
   id: string;
@@ -117,9 +118,7 @@ export default function CaseDetailPage() {
         <AskDocsTab caseId={caseData.id} />
       )}
       {activeTab === "Prep Outline" && (
-        <div className="text-center py-16 text-gray-400 text-sm">
-          Prep Outline will be built in Phase 4
-        </div>
+        <PrepOutlineTab caseId={caseData.id} />
       )}
       {activeTab === "Depositions" && (
         <div className="text-center py-16 text-gray-400 text-sm">
