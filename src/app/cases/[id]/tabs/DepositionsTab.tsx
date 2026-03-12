@@ -82,8 +82,8 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
         </div>
       ) : depos.length === 0 ? (
         <div className="text-center py-12">
-          <Video className="mx-auto mb-3 text-gray-300" size={40} />
-          <p className="text-gray-400 text-sm">No depositions yet</p>
+          <Video className="mx-auto mb-3 text-gray-400" size={40} />
+          <p className="text-gray-600 text-sm">No depositions yet</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -97,7 +97,7 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
                 <h3 className="font-medium text-gray-900 text-sm">
                   {d.title}
                 </h3>
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   {new Date(d.createdAt).toLocaleDateString()}
                 </p>
               </div>
@@ -122,10 +122,10 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">New Deposition</h2>
+              <h2 className="text-lg font-semibold text-gray-900">New Deposition</h2>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-500 hover:text-gray-700"
               >
                 <X size={20} />
               </button>

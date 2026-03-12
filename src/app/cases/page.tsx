@@ -52,8 +52,8 @@ export default function CasesPage() {
         </div>
       ) : cases.length === 0 ? (
         <div className="text-center py-16">
-          <Briefcase className="mx-auto mb-4 text-gray-300" size={48} />
-          <p className="text-gray-500 mb-4">No cases yet</p>
+          <Briefcase className="mx-auto mb-4 text-gray-400" size={48} />
+          <p className="text-gray-600 mb-4">No cases yet</p>
           <button
             onClick={() => setModalOpen(true)}
             className="text-sm text-[#4F6EF7] hover:underline"
@@ -78,7 +78,7 @@ export default function CasesPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-gray-400">
+                <div className="flex items-center gap-4 text-xs text-gray-500">
                   <span className="flex items-center gap-1">
                     <FileText size={12} />
                     {c.docCount} docs

@@ -92,11 +92,11 @@ export function DocumentsTab({ caseId, documents, onRefresh }: DocumentsTabProps
             : "border-gray-300 hover:border-gray-400"
         )}
       >
-        <Upload className="mx-auto mb-3 text-gray-400" size={32} />
+        <Upload className="mx-auto mb-3 text-gray-500" size={32} />
         <p className="text-sm text-gray-600 mb-1">
           {uploading ? "Uploading..." : "Drag & drop files here"}
         </p>
-        <p className="text-xs text-gray-400 mb-3">PDF, DOCX, or TXT</p>
+        <p className="text-xs text-gray-500 mb-3">PDF, DOCX, or TXT</p>
         <label className="inline-block px-4 py-2 text-sm font-medium text-[#4F6EF7] border border-[#4F6EF7] rounded-lg cursor-pointer hover:bg-[#4F6EF7]/5">
           Browse Files
           <input
@@ -111,7 +111,7 @@ export function DocumentsTab({ caseId, documents, onRefresh }: DocumentsTabProps
 
       {/* File list */}
       {documents.length === 0 ? (
-        <div className="text-center py-8 text-gray-400 text-sm">
+        <div className="text-center py-8 text-gray-600 text-sm">
           No documents uploaded yet. Upload case files to get started.
         </div>
       ) : (
@@ -125,7 +125,7 @@ export function DocumentsTab({ caseId, documents, onRefresh }: DocumentsTabProps
                 className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl"
               >
                 <div className="flex items-center gap-3">
-                  <FileText size={18} className="text-gray-400" />
+                  <FileText size={18} className="text-gray-500" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">
                       {doc.filename}

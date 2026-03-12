@@ -98,7 +98,7 @@ export default function CaseDetailPage() {
                 "pb-3 text-sm font-medium border-b-2 transition-colors",
                 activeTab === tab
                   ? "border-[#4F6EF7] text-[#4F6EF7]"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  : "border-transparent text-gray-600 hover:text-gray-900"
               )}
             >
               {tab}
