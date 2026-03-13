@@ -70,19 +70,17 @@ export function AskDocsTab({ caseId }: AskDocsTabProps) {
                 source: { source: string; documentId: string; chunkIndex: number },
                 i: number
               ) => (
-                <button
+                <a
                   key={i}
-                  onClick={async () => {
-                    const res = await fetch(`/api/documents/${source.documentId}/download`);
-                    const { downloadUrl } = await res.json();
-                    window.open(downloadUrl, "_blank");
-                  }}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 hover:text-amber-800 transition-colors cursor-pointer"
+                  href={`/api/documents/${source.documentId}/view`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 hover:text-amber-800 transition-colors cursor-pointer no-underline"
                   title={`Open ${source.source}`}
                 >
                   <FileText size={10} />
                   {source.source} §{source.chunkIndex}
-                </button>
+                </a>
               )
             )}
           </div>
