@@ -130,6 +130,13 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
                 <X size={20} />
               </button>
             </div>
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs text-blue-700 leading-relaxed">
+                This sends a Deposly bot (via Recall.ai) to your Zoom meeting. The bot may take
+                30-60 seconds to join. Once in the call, it captures real-time transcription and
+                streams it to this app, where AI checks testimony against your uploaded case documents.
+              </p>
+            </div>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -140,7 +147,7 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Deposition of John Smith"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4F6EF7]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F6EF7]"
                   autoFocus
                 />
               </div>
@@ -153,7 +160,7 @@ export function DepositionsTab({ caseId }: DepositionsTabProps) {
                   value={zoomUrl}
                   onChange={(e) => setZoomUrl(e.target.value)}
                   placeholder="https://zoom.us/j/..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4F6EF7]"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4F6EF7]"
                 />
               </div>
               <div className="flex justify-end gap-2">

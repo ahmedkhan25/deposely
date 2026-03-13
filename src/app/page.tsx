@@ -12,6 +12,8 @@ import {
   Sparkles,
   Volume2,
   VolumeX,
+  Linkedin,
+  Globe,
 } from "lucide-react";
 
 const features = [
@@ -174,7 +176,28 @@ export default function LandingPage() {
 
       {/* Tech stack footer */}
       <div className="border-t border-gray-200 bg-gray-50 py-8">
-        <div className="max-w-4xl mx-auto px-8 text-center">
+        <div className="max-w-4xl mx-auto px-8 text-center space-y-3">
+          <div className="flex items-center justify-center gap-4">
+            <a
+              href="https://www.linkedin.com/in/ahmedkhan25"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#4F6EF7] hover:text-[#3d5ce0] transition-colors"
+            >
+              <Linkedin size={14} />
+              LinkedIn
+            </a>
+            <span className="text-gray-300">|</span>
+            <a
+              href="https://www.ahmedkhan-ai.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#4F6EF7] hover:text-[#3d5ce0] transition-colors"
+            >
+              <Globe size={14} />
+              ahmedkhan-ai.com
+            </a>
+          </div>
           <p className="text-xs text-gray-500">
             Built with Next.js 14 &middot; CopilotKit + AG-UI &middot; Neon PostgreSQL + pgvector &middot; OpenAI &middot; Recall.ai &middot; AWS S3 &middot; Render
           </p>
