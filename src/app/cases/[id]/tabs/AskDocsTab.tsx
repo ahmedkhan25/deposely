@@ -14,7 +14,8 @@ export function AskDocsTab({ caseId }: AskDocsTabProps) {
     description: "Instructions for the legal AI assistant",
     value: `You are a legal AI assistant helping an attorney prepare for depositions.
     Always call search_case_documents before answering any question.
-    Cite sources using the document filename and chunk index provided by search results.
+    Cite sources as plain text like "(source: filename.docx, chunk 0)" — do NOT use markdown links.
+    The clickable source buttons are rendered automatically below search results.
     If the answer is not in the documents, say so explicitly.
     Never fabricate case facts.`,
   });
