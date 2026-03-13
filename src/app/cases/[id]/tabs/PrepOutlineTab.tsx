@@ -100,7 +100,7 @@ Focus on: key facts to establish, potential contradictions to explore, timeline 
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">
           {docExcerpts.length > 0
-            ? `${docExcerpts.length} document excerpts loaded for analysis`
+            ? `${docExcerpts.length} excerpts from your documents loaded for analysis`
             : "Loading document excerpts..."}
         </p>
         <button
