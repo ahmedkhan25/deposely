@@ -42,10 +42,12 @@ export function AskDocsTab({ caseId }: AskDocsTabProps) {
         (c: {
           content: string;
           documentFilename: string;
+          documentId: string;
           chunkIndex: number;
         }) => ({
           content: c.content,
           source: c.documentFilename,
+          documentId: c.documentId,
           chunkIndex: c.chunkIndex,
         })
       );
@@ -64,16 +66,22 @@ export function AskDocsTab({ caseId }: AskDocsTabProps) {
           <div className="flex flex-wrap gap-1.5 mt-1">
             {result.map(
               (
-                source: { source: string; chunkIndex: number },
+                source: { source: string; documentId: string; chunkIndex: number },
                 i: number
               ) => (
-                <span
+                <button
                   key={i}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-full"
+                  onClick={async () => {
+                    const res = await fetch(`/api/documents/${source.documentId}/download`);
+                    const { downloadUrl } = await res.json();
+                    window.open(downloadUrl, "_blank");
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 hover:text-amber-800 transition-colors cursor-pointer"
+                  title={`Open ${source.source}`}
                 >
                   <FileText size={10} />
                   {source.source} §{source.chunkIndex}
-                </span>
+                </button>
               )
             )}
           </div>

@@ -30,6 +30,7 @@ export async function POST(
       id: documentChunks.id,
       content: documentChunks.content,
       chunkIndex: documentChunks.chunkIndex,
+      documentId: documentChunks.documentId,
       documentFilename: documents.filename,
     })
     .from(documentChunks)

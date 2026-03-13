@@ -23,10 +23,17 @@ export async function GET(
     return NextResponse.json({ error: "Document not found" }, { status: 404 });
   }
 
+  // Use inline disposition for viewable types, attachment for others
+  const ext = doc.filename.split(".").pop()?.toLowerCase();
+  const inlineTypes = ["pdf", "txt", "png", "jpg", "jpeg"];
+  const disposition = inlineTypes.includes(ext || "")
+    ? `inline; filename="${doc.filename}"`
+    : `attachment; filename="${doc.filename}"`;
+
   const command = new GetObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: doc.s3Key,
-    ResponseContentDisposition: `attachment; filename="${doc.filename}"`,
+    ResponseContentDisposition: disposition,
   });
 
   const downloadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
