@@ -1,6 +1,8 @@
-# Deposely
+# Deposly Lite
 
 AI-powered deposition preparation platform for attorneys. Upload case documents, ask questions with RAG-powered chat, generate deposition outlines, and get real-time contradiction flags during live depositions.
+
+Please note: this was coded as a demostrator in one day for demo purposes - not intended for real usage.
 
 **Stack:** Next.js 14 (App Router) · Neon PostgreSQL + pgvector · AWS S3 · OpenAI · Recall.ai · CopilotKit + AG-UI · Render
 

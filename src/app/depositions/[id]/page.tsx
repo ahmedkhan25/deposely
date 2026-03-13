@@ -430,6 +430,8 @@ function PostDepoReview({
   flags: Flag[];
 }) {
   const [showTranscript, setShowTranscript] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(400);
+  const dragging = useRef(false);
   const [summary, setSummary] = useState<{
     key_admissions?: Array<{ timestamp: string; text: string }>;
     contradictions?: Array<{
@@ -513,10 +515,31 @@ function PostDepoReview({
     URL.revokeObjectURL(url);
   }
 
+  function handleMouseDown() {
+    dragging.current = true;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    function onMouseMove(e: MouseEvent) {
+      if (!dragging.current) return;
+      const newWidth = window.innerWidth - e.clientX;
+      setSidebarWidth(Math.max(300, Math.min(700, newWidth)));
+    }
+    function onMouseUp() {
+      dragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    }
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  }
+
   return (
     <div className="flex h-screen">
       {/* Main content */}
-      <div className="flex-[3] overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-w-0">
         <div className="p-8 max-w-3xl mx-auto space-y-8">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -661,8 +684,14 @@ function PostDepoReview({
         </div>
       </div>
 
+      {/* Resizable drag handle */}
+      <div
+        onMouseDown={handleMouseDown}
+        className="w-1.5 bg-gray-200 hover:bg-[#4F6EF7] cursor-col-resize transition-colors shrink-0"
+      />
+
       {/* Chat sidebar */}
-      <div className="flex-[1] border-l border-gray-200 min-w-[320px]">
+      <div style={{ width: sidebarWidth }} className="shrink-0 flex flex-col">
         <CopilotChat
           labels={{
             title: "Review Assistant",
