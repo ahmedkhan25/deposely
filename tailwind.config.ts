@@ -11,6 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "deposly-blue": "#4F6EF7",
+        "deposly-dark": "#0F1629",
+        "deposly-gray": "#F7F7F7",
+        "deposly-border": "#E5E5E5",
+        "deposly-muted": "#6B7280",
+        "deposly-accent": "#2D8B5E",
+        "deposly-coral": "#C74B2A",
       },
     },
   },
