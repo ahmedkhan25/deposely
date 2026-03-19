@@ -228,7 +228,7 @@ function SemanticDriftDiagram() {
       viewport={{ once: true }}
     >
       {/* Column headers */}
-      <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-3 mb-4 items-end">
+      <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-3 mb-4 items-end min-w-[600px]">
         <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
           Person writes spec
         </p>
@@ -250,7 +250,7 @@ function SemanticDriftDiagram() {
             <motion.div
               key={row.person}
               variants={staggerItem}
-              className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-3 items-center"
+              className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-3 items-center min-w-[600px]"
             >
               {/* Person + spec */}
               <div className="rounded-lg border border-teal-400/50 bg-teal-400/10 px-4 py-3">
@@ -342,7 +342,7 @@ function AISlopDiagram() {
       viewport={{ once: true }}
     >
       {/* Column headers */}
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 mb-4">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 mb-4 min-w-[480px]">
         <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
           Distinct voices entering
         </p>
@@ -352,7 +352,7 @@ function AISlopDiagram() {
         </p>
       </div>
 
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-center min-w-[480px]">
         {/* Left — voices with stagger */}
         <motion.div variants={staggerContainer} className="space-y-2">
           {voices.map((v) => (
@@ -453,7 +453,7 @@ function AISlopDiagram() {
 export default function ProblemsPage() {
   return (
     <div className="min-h-screen bg-deposly-gray">
-      <div className="mx-auto max-w-4xl p-8 space-y-20">
+      <div className="mx-auto max-w-4xl p-4 sm:p-8 space-y-20">
         {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

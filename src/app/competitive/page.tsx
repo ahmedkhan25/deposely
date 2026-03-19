@@ -15,7 +15,7 @@ export default function CompetitivePage() {
   const [expandedComp, setExpandedComp] = useState<number | null>(null);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 space-y-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
       {/* Feature Comparison Matrix */}
       <section>
         <SectionHeader

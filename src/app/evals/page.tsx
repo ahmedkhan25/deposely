@@ -196,7 +196,7 @@ export default function EvalsPage() {
 
   return (
     <div className="min-h-screen bg-deposly-gray">
-      <div className="mx-auto max-w-6xl p-8 space-y-16">
+      <div className="mx-auto max-w-6xl p-4 sm:p-8 space-y-16">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <motion.section
           variants={sectionVariants}

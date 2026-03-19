@@ -429,7 +429,7 @@ export default function StrategyPage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-16 space-y-24">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-24">
       {/* ════════════════════════════════════════════════════════════════════════
           SECTION 1: Intelligence vs Judgment
           ════════════════════════════════════════════════════════════════════════ */}
@@ -742,8 +742,7 @@ export default function StrategyPage() {
 
         {/* ReactFlow Diagram */}
         <div
-          className="border border-deposly-border rounded-xl bg-white overflow-hidden mb-6"
-          style={{ height: 400 }}
+          className="border border-deposly-border rounded-xl bg-white overflow-hidden mb-6 h-[300px] sm:h-[400px]"
         >
           <ReactFlow
             nodes={flowNodes}
@@ -1169,7 +1168,7 @@ print(result.output)`}
         <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8 items-center">
           {/* Left: SVG Flywheel */}
           <div className="flex justify-center">
-            <svg width="360" height="360" viewBox="0 0 360 360">
+            <svg viewBox="0 0 360 360" className="w-full max-w-[360px] h-auto">
               {/* Background circle */}
               <circle cx="180" cy="180" r="150" fill="none" stroke="#E5E5E5" strokeWidth="2" />
 

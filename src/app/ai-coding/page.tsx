@@ -451,7 +451,7 @@ function Expandable({
 export default function AICodingPage() {
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-6 py-16 space-y-24">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-24">
         {/* ============================================================ */}
         {/*  HERO                                                        */}
         {/* ============================================================ */}

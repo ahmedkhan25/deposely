@@ -55,7 +55,7 @@ export default function DemosPage() {
   const [extracted, setExtracted] = useState(false);
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
       <SectionHeader
         title="Interactive Demos"
         badge="Try It"
@@ -148,7 +148,7 @@ export default function DemosPage() {
           <div className="border border-deposly-border rounded-xl bg-white overflow-hidden">
             <div className="p-4 border-b border-deposly-border bg-deposly-gray">
               <h3 className="font-semibold text-gray-900 text-sm">RAG-Powered Document Q&A</h3>
-              <div className="flex items-center gap-2 mt-2 text-xs text-deposly-muted">
+              <div className="flex items-center gap-2 mt-2 text-xs text-deposly-muted overflow-x-auto pb-1">
                 <span className="px-2 py-0.5 bg-white rounded border border-deposly-border">Query</span>
                 <span>→</span>
                 <span className="px-2 py-0.5 bg-white rounded border border-deposly-border">Embed</span>

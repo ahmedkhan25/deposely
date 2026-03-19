@@ -49,7 +49,7 @@ export default function LandscapePage() {
   const [glmOpen, setGlmOpen] = useState(false);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12 space-y-16">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
       {/* Stat Cards */}
       <section>
         <SectionHeader title="Legal AI Landscape" badge="AI Engineering" subtitle="The state of AI in legal — by the numbers" />
@@ -79,8 +79,8 @@ export default function LandscapePage() {
       {/* Framework Comparison */}
       <section>
         <SectionHeader title="Agent Framework Comparison" />
-        <div className="border border-deposly-border rounded-xl overflow-hidden bg-white">
-          <table className="w-full text-sm">
+        <div className="border border-deposly-border rounded-xl overflow-x-auto bg-white">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-deposly-border bg-deposly-gray">
                 <th className="text-left p-3 font-medium text-gray-700">Framework</th>

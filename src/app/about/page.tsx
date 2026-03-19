@@ -6,7 +6,7 @@ import { ExternalLink, Linkedin, Globe } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 space-y-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16">
       {/* Profile */}
       <section className="text-center">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-deposly-blue/10 text-deposly-blue text-2xl font-bold mb-4">
